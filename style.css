@@ -18,3 +18,5 @@ h1.brand-logo{width:min(300px,90%);font-size:0;line-height:0;letter-spacing:0;ma
 
 /* 实际可视高度兼容手机地址栏伸缩与不支持 dvh 的内置浏览器。 */
 html,body{overscroll-behavior:none}body{min-height:var(--game-height,100vh)}#cabinet{height:var(--game-height,100vh);width:min(100vw,calc(var(--game-height,100vh)*.565))}@media(max-width:550px){#cabinet{width:100vw}}
+
+.asset-loading{width:100%;margin:0 0 13px;padding:0 3px;color:#73816b;font-size:11px}.load-caption{display:flex;justify-content:space-between;margin-bottom:7px}.load-progress{height:5px;background:#dce2d3;border-radius:5px;overflow:hidden}.load-progress i{display:block;width:0;height:100%;background:linear-gradient(90deg,#92ae8e,#b49c70);border-radius:5px;transition:width .2s ease}.asset-loading button{display:block;margin:9px auto 0;padding:5px 14px;background:#f5eee1;border:1px solid #d0bc9f;border-radius:12px;color:#99724f;font-size:11px}.asset-loading.load-error #loadMessage{color:#a16d54}#start:disabled{cursor:wait;opacity:.65}

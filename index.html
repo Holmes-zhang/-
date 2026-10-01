@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f5f2e9"><title>梗果忍者</title><meta name="description" content="划开熟悉的面孔，躲开炸弹。30秒，看看你能切多少分。"><meta name="x5-orientation" content="portrait"><meta name="screen-orientation" content="portrait"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="stylesheet" href="style.css?v=ce6581144866"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f5f2e9"><title>梗果忍者</title><meta name="description" content="划开熟悉的面孔，躲开炸弹。30秒，看看你能切多少分。"><meta name="x5-orientation" content="portrait"><meta name="screen-orientation" content="portrait"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="stylesheet" href="style.css?v=mobile-81deadb0dc3e"></head>
 <body>
 <main id="cabinet">
  <canvas id="game" aria-label="切割游戏区域，按住鼠标或用手指滑动切割人物，避开炸弹"></canvas>
@@ -13,6 +13,7 @@
   <div class="roster-wrap"><div class="roster-label"><span>熟悉的面孔</span><i></i></div><div id="cast" tabindex="0" aria-label="人物巡游，悬停或聚焦可暂停滚动"></div></div>
   <section class="unlocked-preview" aria-label="已解锁成就"><div class="unlocked-heading"><span>已解锁成就 <small id="unlockedCount">0 / 11</small></span><button id="viewUnlocked">查看全部 ↗</button></div><div id="homeAchievements"></div></section>
   <div class="home-bottom"><label class="identity"><span>你的昵称</span><input id="player" maxlength="16" aria-label="你的昵称" autocomplete="off"><span class="edit-mark">✎</span></label>
+  <div id="assetLoading" class="asset-loading" role="status"><div class="load-caption"><span id="loadMessage">准备人物素材…</span><span id="loadPercent">0%</span></div><div id="loadProgress" class="load-progress" role="progressbar" aria-label="人物加载进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="loadBar"></i></div><button id="loadRetry" type="button" hidden>重新加载</button></div>
   <button id="start" class="primary" disabled>人物入场中…</button>
   <p class="instruction">按住划动，躲开炸弹。</p>
   <div class="bottom-actions"><button id="rank">排行榜</button><button id="skins">刀光皮肤</button><button id="achievements">成就</button><button id="sound" aria-label="切换声音">声音 开</button></div></div>
@@ -24,5 +25,17 @@
  <section id="achievementScreen" class="screen veil" hidden><span class="eyebrow">每一刀，都有回响</span><h2 id="achievementHeading">成就册</h2><p id="achievementDescription">每个成就都有固定星级与独立条件</p><div id="achievementList"></div><button id="achievementBack" class="primary">收册返回</button></section>
  <footer id="playingTip" hidden>按住划动，切个痛快。</footer>
 </main>
-<script src="assets.js?v=flat-2e2d1fe05c71"></script><script src="game.js?v=ce6581144866"></script>
+<script>
+/* 启动提示和兼容补丁使用旧语法，脚本失败时也不会只剩一个入场按钮。 */
+(function(){
+ if(!Object.fromEntries)Object.fromEntries=function(entries){var result={};for(var i=0;i<entries.length;i++)result[entries[i][0]]=entries[i][1];return result};
+ if(typeof Element!=='undefined'&&!Element.prototype.replaceChildren)Element.prototype.replaceChildren=function(){while(this.firstChild)this.removeChild(this.firstChild);for(var i=0;i<arguments.length;i++)this.appendChild(typeof arguments[i]==='string'?document.createTextNode(arguments[i]):arguments[i])};
+ var panel=document.getElementById('assetLoading'),message=document.getElementById('loadMessage'),percent=document.getElementById('loadPercent'),bar=document.getElementById('loadBar'),progress=document.getElementById('loadProgress'),retry=document.getElementById('loadRetry'),timer,finished=false;
+ function fail(text){if(finished)return;message.textContent=text;retry.hidden=false;panel.classList.add('load-error')}
+ function watch(){clearTimeout(timer);timer=setTimeout(function(){fail('加载有些慢，可以再试一次')},35000)}
+ window.GAME_BOOT={progress:function(done,total){if(finished)return;var value=Math.round(done/total*100);message.textContent='人物入场 '+done+' / '+total;percent.textContent=value+'%';bar.style.width=value+'%';progress.setAttribute('aria-valuenow',String(value));panel.classList.remove('load-error');retry.hidden=true;watch()},complete:function(){finished=true;clearTimeout(timer);panel.hidden=true},fail:fail};
+ retry.onclick=function(){location.reload()};window.addEventListener('error',function(event){if(event.message)fail('游戏启动失败，请重新加载')});watch();
+})();
+</script>
+<script src="assets.js?v=mobile-81deadb0dc3e"></script><script src="game.js?v=mobile-81deadb0dc3e"></script>
 </body></html>
