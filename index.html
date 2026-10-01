@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f5f2e9"><title>梗果忍者</title><meta name="description" content="划开熟悉的面孔，躲开炸弹。30秒，看看你能切多少分。"><meta name="x5-orientation" content="portrait"><meta name="screen-orientation" content="portrait"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="stylesheet" href="style.css?v=mobile-81deadb0dc3e"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f5f2e9"><title>梗果忍者</title><meta name="description" content="划开熟悉的面孔，躲开炸弹。30秒，看看你能切多少分。"><meta name="x5-orientation" content="portrait"><meta name="screen-orientation" content="portrait"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="stylesheet" href="style.css?v=mobile-e3f43d6a8b41"></head>
 <body>
 <main id="cabinet">
  <canvas id="game" aria-label="切割游戏区域，按住鼠标或用手指滑动切割人物，避开炸弹"></canvas>
@@ -30,12 +30,12 @@
 (function(){
  if(!Object.fromEntries)Object.fromEntries=function(entries){var result={};for(var i=0;i<entries.length;i++)result[entries[i][0]]=entries[i][1];return result};
  if(typeof Element!=='undefined'&&!Element.prototype.replaceChildren)Element.prototype.replaceChildren=function(){while(this.firstChild)this.removeChild(this.firstChild);for(var i=0;i<arguments.length;i++)this.appendChild(typeof arguments[i]==='string'?document.createTextNode(arguments[i]):arguments[i])};
- var panel=document.getElementById('assetLoading'),message=document.getElementById('loadMessage'),percent=document.getElementById('loadPercent'),bar=document.getElementById('loadBar'),progress=document.getElementById('loadProgress'),retry=document.getElementById('loadRetry'),timer,finished=false;
+ var panel=document.getElementById('assetLoading'),message=document.getElementById('loadMessage'),percent=document.getElementById('loadPercent'),bar=document.getElementById('loadBar'),progress=document.getElementById('loadProgress'),retry=document.getElementById('loadRetry'),timer,finished=false,waiting='';
  function fail(text){if(finished)return;message.textContent=text;retry.hidden=false;panel.classList.add('load-error')}
- function watch(){clearTimeout(timer);timer=setTimeout(function(){fail('加载有些慢，可以再试一次')},35000)}
- window.GAME_BOOT={progress:function(done,total){if(finished)return;var value=Math.round(done/total*100);message.textContent='人物入场 '+done+' / '+total;percent.textContent=value+'%';bar.style.width=value+'%';progress.setAttribute('aria-valuenow',String(value));panel.classList.remove('load-error');retry.hidden=true;watch()},complete:function(){finished=true;clearTimeout(timer);panel.hidden=true},fail:fail};
+ function watch(){clearTimeout(timer);timer=setTimeout(function(){fail('还在等待'+(waiting?'：'+waiting:'人物素材')+'，可重试补上')},15000)}
+ window.GAME_BOOT={progress:function(done,total,names){if(finished)return;waiting=names||'';var value=Math.round(done/total*100);message.textContent='人物入场 '+done+' / '+total+(done>0&&total-done<=3&&waiting?' · 等待'+waiting:'');percent.textContent=value+'%';bar.style.width=value+'%';progress.setAttribute('aria-valuenow',String(value));panel.classList.remove('load-error');retry.hidden=true;watch()},complete:function(){finished=true;clearTimeout(timer);panel.hidden=true},fail:fail,setRetry:function(handler){retry.onclick=handler}};
  retry.onclick=function(){location.reload()};window.addEventListener('error',function(event){if(event.message)fail('游戏启动失败，请重新加载')});watch();
 })();
 </script>
-<script src="assets.js?v=mobile-81deadb0dc3e"></script><script src="game.js?v=mobile-81deadb0dc3e"></script>
+<script src="assets.js?v=mobile-e3f43d6a8b41"></script><script src="game.js?v=mobile-e3f43d6a8b41"></script>
 </body></html>
